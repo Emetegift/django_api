@@ -4,7 +4,7 @@ from .models import Product
 from .serializers import ProductSerializer
 
 
-class ProductCreateAPIView(generics.CreateAPIView):
+class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
@@ -12,13 +12,21 @@ class ProductCreateAPIView(generics.CreateAPIView):
         # serializer.save(username.request.user)
         title = serializer.validated_data.get('title')
         content = serializer.validated_data.get('content')
-        or None
+        # or None
         if content is None:
             content=title
         serializer.save()
         # send a Django signal
 
-        
+
 class ProductDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
+class ProductListAPIView(generics.ListAPIView):
+    """
+    Not using this
+    """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
