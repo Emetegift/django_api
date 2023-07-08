@@ -5,7 +5,7 @@ import requests
 # enpoint ="https://httpbin.org/anything"
 enpoint ="http://localhost:8000/api/"
 
-get_response = requests.get(enpoint, params={"product_id":123}, json={"query": "Hello world"}) # This http request will return the data in a json format thats similar to a python dictionary
+get_response = requests.post(enpoint, json={"title": "Hello world"}) # This http request will return the data in a json format thats similar to a python dictionary
 # print(get_response.text)
 
 #HTTP Request---> returns HTML, while
