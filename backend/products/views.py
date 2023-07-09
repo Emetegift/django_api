@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Product
 from .serializers import ProductSerializer
+from .permissions import IsStaffEditorPermission
 
 ## To create generic API views
 class ProductListCreateAPIView(generics.ListCreateAPIView):
@@ -13,8 +14,9 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     authentication_classes = [authentication.SessionAuthentication] 
 
     ## To add permission to API
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly] Or
-    permission_classes = [permissions.DjangoModelPermissions]
+    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission] #OR
+    # permission_classes = [permissions.DjangoModelPermissions]
+    
     def perform_create(self, serializer):
         # serializer.save(username.request.user)
         title = serializer.validated_data.get('title')
