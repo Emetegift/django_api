@@ -12,9 +12,9 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     ##To authenticate a user
-    authentication_classes = [authentication.SessionAuthentication, 
-    TokenAuthentication
-    ] # This authentication.TokenAuthentication will work with the authtoken 
+    # authentication_classes = [authentication.SessionAuthentication, 
+    # TokenAuthentication
+    # ] # This authentication.TokenAuthentication will work with the authtoken 
 
     ## To add permission to API
     permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission] #OR
