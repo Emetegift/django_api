@@ -2,23 +2,27 @@ from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from api.authentication import TokenAuthentication
+# from api.authentication import TokenAuthentication
 from .models import Product
+from api.mixins import StaffEditorPermissionMixin
 from .serializers import ProductSerializer
-from .permissions import IsStaffEditorPermission
+# from ..api.permissions import IsStaffEditorPermission
 
 ## To create generic API views
-class ProductListCreateAPIView(generics.ListCreateAPIView):
+class ProductListCreateAPIView(
+    StaffEditorPermissionMixin,  # For users permissions
+    generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    ##To authenticate a user
-    # authentication_classes = [authentication.SessionAuthentication, 
-    # TokenAuthentication
-    # ] # This authentication.TokenAuthentication will work with the authtoken 
 
+    """
+    This StaffEditorPermissionMixin has been used in place of the comment permissions commands below
+    ## Check the settings for authentication settings for users
+    
     ## To add permission to API
-    permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission] #OR
+    # permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission] #OR
     # permission_classes = [permissions.DjangoModelPermissions]
+    """
     
     def perform_create(self, serializer):
         # serializer.save(username.request.user)
@@ -31,12 +35,16 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         # send a Django signal
 
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
+class ProductDetailAPIView(
+    StaffEditorPermissionMixin,  # For users permissions
+    generics.RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(
+    StaffEditorPermissionMixin,  # For users permissions
+    generics.UpdateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
@@ -48,7 +56,9 @@ class ProductUpdateAPIView(generics.UpdateAPIView):
             instance.content=instance.title
 
 
-class ProductDestroyAPIView(generics.DestroyAPIView):
+class ProductDestroyAPIView(
+    StaffEditorPermissionMixin, # For users permissions
+    generics.DestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
