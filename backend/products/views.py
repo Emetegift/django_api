@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, mixins
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -17,7 +17,7 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         # or None
         if content is None:
             content=title
-        serializer.save()
+        serializer.save(content=content)
         # send a Django signal
 
 
@@ -56,6 +56,49 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
 #     """
 #     queryset = Product.objects.all()
 #     serializer_class = ProductSerializer
+
+
+
+
+
+
+# # mxins and a generic class view
+
+class ProductMixinViews(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    generics.GenericAPIView
+):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field ='pk'
+
+    #To define the get method using the generic class view
+    def get(self, request,*args, **kwargs):
+        pk=kwargs.get('pk')
+        if pk is not None:
+            return self.retrieve(request, *args, **kwargs) ## This will return the the retrieve function if pk is present
+        return self.list(request,*args, **kwargs)
+    
+    ##To define the post method using the generic class view
+    def post(self, request,*args, **kwargs):
+        return self.create(request,*args, **kwargs)
+    
+    def perform_create(self, serializer):
+        # serializer.save(username.request.user)
+        title = serializer.validated_data.get('title')
+        content = serializer.validated_data.get('content')
+        # or None
+        if content is None:
+            content="This is me"
+        serializer.save(content=content)
+        # send a Django signal
+
+
+
+
+
 
 
 ##To write create, retireve and list endpoints using a single function
