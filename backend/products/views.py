@@ -1,15 +1,18 @@
-from rest_framework import generics, mixins
+from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import Product
 from .serializers import ProductSerializer
 
-
+## To create generic API views
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-
+    ##To authenticate a user
+    authentication_classes = [authentication.SessionAuthentication]
+    ## To add permission to API
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     def perform_create(self, serializer):
         # serializer.save(username.request.user)
         title = serializer.validated_data.get('title')
@@ -62,9 +65,9 @@ class ProductDestroyAPIView(generics.DestroyAPIView):
 
 
 
-# # mxins and a generic class view
+# # Mxins and a generic class view
 
-class ProductMixinViews(
+class ProductMixin(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
@@ -94,8 +97,6 @@ class ProductMixinViews(
             content="This is me"
         serializer.save(content=content)
         # send a Django signal
-
-
 
 
 
