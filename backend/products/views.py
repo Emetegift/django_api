@@ -2,6 +2,7 @@ from rest_framework import authentication, generics, mixins, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from api.authentication import TokenAuthentication
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsStaffEditorPermission
@@ -11,7 +12,9 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     ##To authenticate a user
-    authentication_classes = [authentication.SessionAuthentication] 
+    authentication_classes = [authentication.SessionAuthentication, 
+    TokenAuthentication
+    ] # This authentication.TokenAuthentication will work with the authtoken 
 
     ## To add permission to API
     permission_classes = [permissions.IsAdminUser, IsStaffEditorPermission] #OR
