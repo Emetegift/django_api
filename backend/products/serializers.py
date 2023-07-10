@@ -9,11 +9,13 @@ class ProductSerializer(serializers.ModelSerializer):
         view_name='product-detail',
         lookup_field = 'pk'
     )
+    # email = serializers.EmailField(write_only=True)
     class Meta:
         model = Product
         fields =[
             'url',
             'edit_url',
+            # 'email',
             'pk',
             'title',
             'content',
@@ -21,6 +23,14 @@ class ProductSerializer(serializers.ModelSerializer):
             'sale_price',
             'my_discount'
         ]
+ 
+#  # This is basically how a new field can be added and updated using serializers
+#     def create(self, validated_data):
+#     #   return  Product.objects.create(**validated_data) OR
+#         # email = validated_data.pop('email')
+#         obj = super().create(validated_data)
+#         # print(email, obj)
+#         return obj
 
     def get_edit_url(self, obj):
          # return f"/api/v2/products/{obj.pk}"  # OR
