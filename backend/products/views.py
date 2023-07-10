@@ -4,13 +4,14 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 # from api.authentication import TokenAuthentication
 from .models import Product
-from api.mixins import StaffEditorPermissionMixin
+from api.mixins import StaffEditorPermissionMixin, UserQuerySetMixin
 from .serializers import ProductSerializer
 # from ..api.permissions import IsStaffEditorPermission
 
 ## To create generic API views
 class ProductListCreateAPIView(
     StaffEditorPermissionMixin,  # For users permissions
+    UserQuerySetMixin,
     generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -29,15 +30,26 @@ class ProductListCreateAPIView(
         # email = serializer.validated_data.pop('email')
         # print(email)
         title = serializer.validated_data.get('title')
-        content = serializer.validated_data.get('content')
+        content = serializer.validated_data.get('content') or None
         # or None
         if content is None:
             content=title
-        serializer.save(content=content)
+        serializer.save(user=self.request.user, content=content)
         # send a Django signal
+
+# Request user data and customize view querryset usin the view directly. please note  that this can be inplemented on mixins
+    # def get_queryset(self, *args, **kwargs):
+    #     qs = super().get_queryset(*args, **kwargs)
+    #     request = self.request
+    #     user = request.user
+    #     if not user.is_authenticated:
+    #         return Product.objects.none()
+    #     # print(request.user)
+    #     return qs.filter(user=request.user)
 
 
 class ProductDetailAPIView(
+    UserQuerySetMixin,
     StaffEditorPermissionMixin,  # For users permissions
     generics.RetrieveAPIView):
     queryset = Product.objects.all()
@@ -111,7 +123,7 @@ class ProductMixin(
     def perform_create(self, serializer):
         # serializer.save(username.request.user)
         title = serializer.validated_data.get('title')
-        content = serializer.validated_data.get('content')
+        content = serializer.validated_data.get('content') or None
         # or None
         if content is None:
             content="This is me"
@@ -146,7 +158,7 @@ def product_alt_view(request, pk=None, *args, **kwargs):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             title = serializer.validated_data.get('title')
-            content =  serializer.validated_data.get('content')
+            content =  serializer.validated_data.get('content') or None
             # or None
             if content is None:
                 content=title
