@@ -19,4 +19,4 @@ class UserQuerySetMixin():
         qs = super().get_queryset(*args, **kwargs)
         if allow_staff_view and user.is_staff:
             return qs
-        return qs.filter(**lookup_data) #This will return self.user_field=self.request.suer
+        return qs.filter(**lookup_data) #This will return self.user_field=self.request.user. This will narrow down the queryset

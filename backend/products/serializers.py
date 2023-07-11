@@ -17,9 +17,9 @@ class ProductInlineSerializer(serializers.Serializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     owner = UserPublicSerializer(source='user', read_only=True) #This will call all the values in the general serializers
-    related_product = ProductInlineSerializer(source='user.product_set.all', read_only=True, many=True)
+    # related_product = ProductInlineSerializer(source='user.product_set.all', read_only=True, many=True)
     # my_user_data = serializers.SerializerMethodField(read_only=True)
-    my_discount = serializers.SerializerMethodField(read_only=True)
+    # my_discount = serializers.SerializerMethodField(read_only=True)
     edit_url =  serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(  #This will handle the detail view (retrieve)
         view_name='product-detail',
@@ -42,9 +42,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'content',
             'price',
             'sale_price',
-            'my_discount',
-            'related_product',
-            # 'my_user_data',
+            # 'my_discount',
+            # 'related_product',
+            # # 'my_user_data',
         ]
 
     def  get_my_user_data(self, obj):
@@ -74,8 +74,8 @@ class ProductSerializer(serializers.ModelSerializer):
             return None
         return reverse("product-edit", kwargs={"pk":obj.pk}, request=request) # This will handle the update endpoint
         # return reverse("product-detail", kwargs={"pk":obj.pk}, request=request)
-    def get_my_discount(self, obj):
-        if not hasattr(obj, 'id'):
-            return None
-        if not isinstance(obj, Product):
-            return None
+    # def get_my_discount(self, obj):
+    #     if not hasattr(obj, 'id'):
+    #         return None
+    #     if not isinstance(obj, Product):
+    #         return None
