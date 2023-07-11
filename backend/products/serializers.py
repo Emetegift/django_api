@@ -1,10 +1,24 @@
 from rest_framework import serializers
+from api.serializers import UserPublicSerializer ## This is regarded as the general serializer linked to the one above
 from .models import Product
 from rest_framework.reverse import reverse
 # from .validators import validate_title
 from . import validators
 
+
+## Related fields and foreign key serializer. this will basicall list all the users products links and title
+class ProductInlineSerializer(serializers.Serializer):
+    url = serializers.HyperlinkedIdentityField(  #This will handle the detail view (retrieve)
+        view_name='product-detail',
+        lookup_field = 'pk',
+        read_only=True
+    )
+    title = serializers.CharField(read_only=True)
+
 class ProductSerializer(serializers.ModelSerializer):
+    owner = UserPublicSerializer(source='user', read_only=True) #This will call all the values in the general serializers
+    related_product = ProductInlineSerializer(source='user.product_set.all', read_only=True, many=True)
+    # my_user_data = serializers.SerializerMethodField(read_only=True)
     my_discount = serializers.SerializerMethodField(read_only=True)
     edit_url =  serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(  #This will handle the detail view (retrieve)
@@ -18,7 +32,7 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields =[
-            # 'user',
+            'owner',
             'url',
             'edit_url',
             # 'email',
@@ -28,9 +42,15 @@ class ProductSerializer(serializers.ModelSerializer):
             'content',
             'price',
             'sale_price',
-            'my_discount'
+            'my_discount',
+            'related_product',
+            # 'my_user_data',
         ]
 
+    def  get_my_user_data(self, obj):
+        return {
+            "username": obj.user.username ## This will basically get the actual username
+        }
     # # To validate a particular value in a database, e.g;
     # def validate_title(self, value):
     #     request = self.context.get(request)
