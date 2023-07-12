@@ -20,6 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')), ## This is the url for our localhost:8000
+    path('api/search/', include('search.urls')),
     path('api/products/', include('products.urls')),
     path('api/v2/', include('cfehome.routers')),
 ]
