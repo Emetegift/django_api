@@ -1,3 +1,4 @@
+import random
 from django.conf import settings
 from django.db import models
 from django.db.models import Q #This will help query the lookup with error
@@ -5,6 +6,9 @@ from django.db.models import Q #This will help query the lookup with error
 # Create your models here.
 
 User = settings.AUTH_USER_MODEL #Auth user
+
+## To tag things to the product class
+TAGS_MODEL_VALUES = ['electronics', 'cars', 'boats', 'movies', 'cameras']
 
 class ProductQuerySet(models.QuerySet):
     def is_public(self):
@@ -34,6 +38,12 @@ class Product(models.Model):
     public = models.BooleanField(default=True)
 
     objects = ProductManager()
+
+    def is_public(self) -> bool:
+        return self.public ## This will return true or false
+    
+    def get_tags_list(self):
+        return [random.choice(TAGS_MODEL_VALUES)]
 
     def __str__(self):
         return self.title
