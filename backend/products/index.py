@@ -5,7 +5,7 @@ from.models import Product
 
 @register(Product)
 class ProductIndex(AlgoliaIndex):
-    shoul_index ='is_public'
+    # shoul_index ='is_public'
     fields = [
         'title',
         'content', 
@@ -13,4 +13,11 @@ class ProductIndex(AlgoliaIndex):
         'user',
         'public'
     ]
+    
+    settings ={
+        "searchableAttributes" : ['title', 'content'],
+        "attributesForFaceting" : ['user','public']
+    }
+    
+    
     tags = 'get_tags_list'
