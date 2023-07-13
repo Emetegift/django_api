@@ -20,10 +20,8 @@ class ArticleSerializer(serializers.ModelSerializer):
         view_name='article-detail',
         lookup_field = 'pk'
     )
-    # email = serializers.EmailField(write_only=True) # Please note that this can be anything besides email
-    # title = serializers.CharField(validators=[validate_title])
+  
     title = serializers.CharField(validators=[validators.validate_title_no_hello, validators.unique_product_title])
-    # email = serializers.CharField(source='user.email', read_only=True)
     class Meta:
         model = Article
         fields =[
@@ -35,7 +33,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             'tags',
             'make_public',
             'publish_date',
-            'path',
+            'endpoint',
         ]
 
     def  get_my_user_data(self, obj):

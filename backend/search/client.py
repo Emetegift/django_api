@@ -10,6 +10,11 @@ def get_index(index_name='cfe_Product'):
     index = client.init_index(index_name)
     return index
 
+def get_index(index_name='cfe_Article'):
+    client = get_client()
+    index = client.init_index(index_name)
+    return index
+
 # function that will perform search
 def perform_search(query, **kwargs):
     index = get_index()
