@@ -29,6 +29,7 @@ class ProductSerializer(serializers.ModelSerializer):
     # title = serializers.CharField(validators=[validate_title])
     title = serializers.CharField(validators=[validators.validate_title_no_hello, validators.unique_product_title])
     # email = serializers.CharField(source='user.email', read_only=True)
+    body = serializers.CharField(source='content') ## This will enable the content field that has been changed to body to reflect
     class Meta:
         model = Product
         fields =[
@@ -39,13 +40,14 @@ class ProductSerializer(serializers.ModelSerializer):
             'pk',
             'title',
             # 'name',
-            'content',
+            'body',
             'price',
             'sale_price',
             # 'my_discount',
             # 'related_product',
             # # 'my_user_data',
             'public',
+            'endpoint',
         ]
 
     def  get_my_user_data(self, obj):

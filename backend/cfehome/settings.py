@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'api',
     'products',
     'search',
+    'article',
 ]
 
 MIDDLEWARE = [

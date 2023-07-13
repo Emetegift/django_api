@@ -39,6 +39,21 @@ class Product(models.Model):
 
     objects = ProductManager()
 
+    def get_absolute_url(self):
+        return f"/api/products/{self.pk}/"
+
+    @property
+    def endpoint(self):
+        return f"/products/{self.pk}/"
+        
+    @property
+    def url(self):
+        return self.get_absolute_url()
+
+    @property
+    def body(self):
+        return self.content # This will basically change the content to body in the serializer
+
     def is_public(self) -> bool:
         return self.public ## This will return true or false
     
