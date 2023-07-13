@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     # Third party api
     'algoliasearch_django',
 
-    # Third party packages 
+    # Third party packages
+    'corsheaders', ## Fors CORS Header configuration
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware', ## Fors CORS Header configuration
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,6 +67,15 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'cfehome.urls'
+CORS_URLS_REGEX = r"^/api/.*"  ## Fors CORS Header configuration
+CORS_ALLOWED_ORIGINS = [] ## This will connect with the required frontend application
+
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += [
+        'http://localhost:8111',
+        'https://localhost:8111',
+
+    ]
 
 TEMPLATES = [
     {
