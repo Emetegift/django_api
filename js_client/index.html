@@ -6,10 +6,17 @@
     <title>Document</title>
 </head>
 <body>
-    <form id="login-form" method="POST">
-        <input type="text" name="username" placeholder="Your username"/>
-        <input type="password" name="password" placeholder="Your password"/>
-        <input type="submit" value="Login"/>
+    <div>
+        <form id="login-form" method="POST">
+            <input type="text" name="username" placeholder="Your username"/>
+            <input type="password" name="password" placeholder="Your password"/>
+            <input type="submit" value="Login"/>
+        </form>
+    </div>
+
+    <form id="search-form" method="GET">
+        <input type="text" name="q" placeholder="Search..."/>
+        <input type="submit" value="Search"/>
     </form>
 
     <div id="content-container"></div>
